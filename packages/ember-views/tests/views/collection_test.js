@@ -539,3 +539,41 @@ test("a array_proxy that backs an sorted array_controller that backs a collectio
     container.destroy();
   });
 });
+
+test("should render itemViewClass properly for objects", function() {
+
+  var array = Ember.A([
+      { name: "Other Katz" },
+      { name: "Scumbag Demon" }, 
+      { name: "Lord British" }
+    ]);
+
+  var itemView;
+
+  var itemsController = Ember.ArrayController.create({
+    content: array
+  });
+
+  var AnItemView = Ember.View.extend({
+     template: Ember.Handlebars.compile("Greetings {{name}}")
+  });
+
+  var container = Ember.CollectionView.create({
+    content: itemsController,
+    itemViewClass: AnItemView
+  });
+
+  Ember.run(function() {
+    container.appendTo('#qunit-fixture');
+  });
+
+  equal(container.get('content.length'), 3, 'ArrayController should have 3 entries');
+  equal(container.get('content.content.length'), 3, 'RecordArray should have 3 entries');
+  equal(container.get('childViews.length'), 3, 'CollectionView should have 3 entries');
+
+  deepEqual(container.$(':nth-child(3)').text(), "Greetings Lord British");
+
+  Ember.run(function() {
+    container.destroy();
+  });
+});
