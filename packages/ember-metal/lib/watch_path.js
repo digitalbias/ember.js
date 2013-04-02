@@ -1,8 +1,8 @@
 require('ember-metal/utils');
 require('ember-metal/chains');
 
-var metaFor = Ember.meta,
-    isArray = Ember.isArray,
+var metaFor = Ember.meta, // utils.js
+    typeOf = Ember.typeOf, // utils.js
     ChainNode = Ember._ChainNode; // chains.js
 
 // get the chains for the current object. If the current object has
@@ -20,7 +20,7 @@ function chainsFor(obj) {
 
 Ember.watchPath = function(obj, keyPath) {
   // can't watch length on Array - it is special...
-  if (keyPath === 'length' && isArray(obj)) { return; }
+  if (keyPath === 'length' && typeOf(obj) === 'array') { return; }
 
   var m = metaFor(obj), watching = m.watching;
 
@@ -41,6 +41,4 @@ Ember.unwatchPath = function(obj, keyPath) {
   } else if (watching[keyPath] > 1) {
     watching[keyPath]--;
   }
-
-  return this;
 };
